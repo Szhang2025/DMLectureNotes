@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ML for Business Analytics – 11 Chapters</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #f0f5fb;
+            font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
+            padding: 1.5rem;
+            color: #1e2b3c;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            padding: 2.5rem;
+            box-shadow: 0 15px 35px rgba(0,20,30,0.12);
+        }
+        h1 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #0B3B5C, #1F636E);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            border-bottom: 3px solid #2c3e50;
+            padding-bottom: 0.8rem;
+            margin-bottom: 1.5rem;
+        }
+        /* Dropdown navigation */
+        .chapter-selector {
+            margin-bottom: 2rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem;
+            background: #e8f0fa;
+            padding: 0.8rem 1.5rem;
+            border-radius: 60px;
+        }
+        .chapter-selector label {
+            font-weight: 600;
+            color: #0b3b5c;
+        }
+        .chapter-selector select {
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            border: 2px solid #c0d4e0;
+            background: white;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #0b3b5c;
+            cursor: pointer;
+            outline: none;
+            min-width: 200px;
+        }
+        .chapter-selector select:hover {
+            border-color: #1abc9c;
+        }
+        .chapter-selector select:focus {
+            border-color: #1abc9c;
+            box-shadow: 0 0 0 3px rgba(26, 188, 156, 0.2);
+        }
+        .chapter-section {
+            background: #f8fafc;
+            border-radius: 24px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 2.5rem;
+            border: 1px solid #e2eaf0;
+            display: block;
+        }
+        .chapter-section.hidden {
+            display: none;
+        }
+        .badge { background: #1abc9c; color: #031016; padding: 0.1rem 1rem; border-radius: 40px; font-weight: 700; font-size: 0.8rem; display: inline-block; margin-bottom: 0.3rem; }
+        .core { font-size: 1rem; color: #1f4a66; margin-bottom: 1.2rem; background: #eef4fa; padding: 0.5rem 1rem; border-radius: 30px; display: inline-block; }
+        h3 { font-size: 1.4rem; margin: 0.5rem 0 0.3rem; color: #153243; }
+        .concept-text { background: white; padding: 1rem 1.5rem; border-radius: 16px; margin: 0.8rem 0 1.2rem; border-left: 4px solid #1abc9c; line-height: 1.7; }
+        .concept-text strong { color: #0B3B5C; }
+        .concept-text ul { margin: 0.5rem 0 0 1.5rem; }
+        .concept-text ul li { margin-bottom: 0.2rem; }
+        .quiz-item { background: white; border-radius: 16px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; border: 1px solid #dce5ed; }
+        .quiz-item p { font-weight: 600; margin-bottom: 0.3rem; }
+        .quiz-item ul { padding-left: 1.5rem; margin: 0.3rem 0; }
+        .quiz-item ul li { margin-bottom: 0.15rem; }
+        .btn-answer { background: #1e293b; color: white; border: none; padding: 0.3rem 1.2rem; border-radius: 30px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: 0.15s; margin-top: 0.4rem; }
+        .btn-answer:hover { background: #0b3b5c; }
+        .answer-box { background: #e6f2f0; padding: 0.5rem 1rem; border-radius: 30px; color: #0b3b5c; font-weight: 500; display: none; margin-top: 0.5rem; }
+        .answer-box.show { display: inline-block; }
+
+        /* R Code Appendix */
+        .r-appendix {
+            margin-top: 1.5rem;
+            border-top: 2px dashed #c0d4e0;
+            padding-top: 1.2rem;
+        }
+        .btn-r-code {
+            background: #1a4b5c;
+            color: white;
+            border: none;
+            padding: 0.4rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: 0.15s;
+        }
+        .btn-r-code:hover { background: #0d3340; }
+        .r-code-box {
+            background: #1e2b3c;
+            color: #e8f0fa;
+            padding: 1.2rem 1.5rem;
+            border-radius: 16px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+            overflow-x: auto;
+            display: none;
+            margin-top: 0.8rem;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+        .r-code-box.show { display: block; }
+
+        .back-top { display: inline-block; margin: 1rem 0 0.5rem; color: #1abc9c; font-weight: 600; text-decoration: none; }
+        .back-top:hover { text-decoration: underline; }
+        hr { margin: 1.5rem 0; border: none; height: 2px; background: linear-gradient(90deg, #c0d4e0, transparent); }
+        @media (max-width: 600px) { .container { padding: 1.2rem; } .chapter-section { padding: 1.2rem; } h1 { font-size: 1.8rem; } .chapter-selector { flex-direction: column; align-items: stretch; } }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>📘 ML for Business Analytics<br><span style="font-size:1.2rem; -webkit-text-fill-color:#1f4a66; background:none;">11 Chapters – Concepts, Quizzes &amp; R Code</span></h1>
+
+    <!-- DROPDOWN NAVIGATION -->
+    <div class="chapter-selector">
+        <label for="chapterSelect">📂 Jump to chapter:</label>
+        <select id="chapterSelect" onchange="showChapter(this.value)">
+            <option value="ch1">1. Overview – Foundations</option>
+            <option value="ch2">2. Multiple Regression</option>
+            <option value="ch3">3. Ridge &amp; Lasso</option>
+            <option value="ch4">4. Logistic Regression</option>
+            <option value="ch5">5. CART – Decision Trees</option>
+            <option value="ch6">6. k-Nearest Neighbors</option>
+            <option value="ch7">7. Deep Learning</option>
+            <option value="ch8">8. Clustering</option>
+            <option value="ch9">9. Ensemble Methods</option>
+            <option value="ch10">10. Support Vector Machines</option>
+            <option value="ch11">11. PCA</option>
+        </select>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHAPTER 1 -->
+    <div class="chapter-section" id="ch1">
+        <div class="badge">Chapter 1</div>
+        <h3>Overview – Foundations of ML</h3>
+        <div class="core">📌 supervised vs unsupervised · prediction · classification · performance metrics</div>
+        <div class="concept-text">
+            <strong>Key ideas:</strong> <strong>Supervised learning</strong> uses labeled data to make predictions. It includes two main tasks:
+            <ul>
+                <li><strong>Prediction of a quantitative variable</strong> (regression) – e.g., forecasting sales, delivery time, customer lifetime value.</li>
+                <li><strong>Classification of categorical variables</strong> – e.g., churn (yes/no), fraud (fraud/legit), customer segment (premium/basic).</li>
+            </ul>
+            <strong>Performance metrics vary</strong> by task: for regression, use RMSE, MAE, or R². For classification, use accuracy, precision, recall, F1, or ROC-AUC. Choose metrics that align with business costs and objectives.
+        </div>
+
+        <div class="quiz-item"><p>1. A retail company wants to predict which customers are likely to churn. This is a:</p>
+            <ul><li>A) Unsupervised clustering task</li><li>B) Supervised classification task</li><li>C) Supervised regression task</li><li>D) Dimensionality reduction task</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Supervised classification – target is categorical (churn / no churn).</div>
+        </div>
+        <div class="quiz-item"><p>2. A logistics company wants to forecast delivery times (in hours). This is a:</p>
+            <ul><li>A) Classification problem</li><li>B) Regression problem (quantitative prediction)</li><li>C) Clustering problem</li><li>D) Association problem</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Regression – delivery time is a continuous numeric value.</div>
+        </div>
+        <div class="quiz-item"><p>3. For a fraud detection model, which metric is most critical if false negatives cost $500 and false positives cost $5?</p>
+            <ul><li>A) Accuracy</li><li>B) Precision</li><li>C) Recall (Sensitivity)</li><li>D) R²</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ C) Recall – we want to catch as many actual frauds as possible (minimize false negatives).</div>
+        </div>
+        <div class="quiz-item"><p>4. Your marketing team wants to segment customers by behavior. No labels exist. Which approach?</p>
+            <ul><li>A) Logistic regression</li><li>B) kNN</li><li>C) Clustering (unsupervised)</li><li>D) Linear regression</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ C) Clustering is unsupervised – no labels needed.</div>
+        </div>
+        <div class="quiz-item"><p>5. You get 92% train accuracy, 74% test accuracy. What is the issue?</p>
+            <ul><li>A) Underfitting</li><li>B) Overfitting</li><li>C) Data leakage</li><li>D) Insufficient features</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Overfitting – model memorized training but fails to generalize.</div>
+        </div>
+
+        <!-- R Code Appendix -->
+        <div class="r-appendix">
+            <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
+            <div class="r-code-box">
+# Chapter 1: Overview – Foundations of ML
+
+# Load required libraries
+library(tidyverse)
+library(caret)
+
+# Example: Split data into train/test
+set.seed(123)
+data <- iris
+train_index <- createDataPartition(data$Species, p = 0.7, list = FALSE)
+train <- data[train_index, ]
+test <- data[-train_index, ]
+
+# Train a simple classification model (kNN)
+model <- train(Species ~ ., data = train, method = "knn",
+               trControl = trainControl(method = "cv", number = 5),
+               tuneLength = 5)
+
+# Predict and evaluate
+predictions <- predict(model, test)
+confusionMatrix(predictions, test$Species)
+            </div>
+        </div>
+        <a href="#" class="back-top">⬆ Back to top</a>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHAPTER 2 -->
+    <div class="chapter-section hidden" id="ch2">
+        <div class="badge">Chapter 2</div>
+        <h3>Multiple Regression</h3>
+        <div class="core">📌 predicting quantitative variables · interpreting coefficients · feature importance</div>
+        <div class="concept-text">
+            <strong>Key ideas:</strong> Multiple regression models the relationship between several predictors and a <strong>quantitative outcome</strong> (e.g., sales, price, demand). Coefficients show the expected change in the outcome per unit change in the predictor, holding others fixed. For regression tasks, use metrics like <strong>RMSE</strong> (root mean squared error) or <strong>MAE</strong> (mean absolute error) to evaluate performance – these are more business-interpretable than R² alone. Watch for multicollinearity (highly correlated predictors) which makes coefficients unstable.
+        </div>
+
+        <div class="quiz-item"><p>1. Coefficient for sqft is $250. What does this mean?</p>
+            <ul><li>A) Each sqft adds exactly $250</li><li>B) Holding other variables constant, each sqft adds $250 on average</li><li>C) Sqft is the only important predictor</li><li>D) The model is overfitting</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Holding other variables constant, each extra sqft adds $250.</div>
+        </div>
+        <div class="quiz-item"><p>2. Two predictors have correlation 0.92. What business risk?</p>
+            <ul><li>A) Underfitting</li><li>B) Coefficients become unstable (multicollinearity)</li><li>C) Perfect accuracy</li><li>D) No issue</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) High correlation makes coefficient estimates unstable.</div>
+        </div>
+        <div class="quiz-item"><p>3. Which regression metric tells you the average prediction error in the same units as the outcome?</p>
+            <ul><li>A) R²</li><li>B) RMSE or MAE</li><li>C) Adjusted R²</li><li>D) Coefficient size</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) RMSE and MAE are in the same units as the target variable.</div>
+        </div>
+        <div class="quiz-item"><p>4. A 95% prediction interval is [$120, $180]. How to interpret for business?</p>
+            <ul><li>A) Customer will definitely spend in that range</li><li>B) 95% confident the true spend falls in this range</li><li>C) 95% of all customers spend in this range</li><li>D) Model is useless</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Prediction interval gives a range for an individual prediction with 95% confidence.</div>
+        </div>
+        <div class="quiz-item"><p>5. Coefficient for "website visits" is 0.02. Business insight?</p>
+            <ul><li>A) Visits have no effect</li><li>B) Practical impact is tiny – each visit adds only $0.02</li><li>C) Remove the feature</li><li>D) Visits are the most important</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) The business impact is tiny; may not be worth tracking.</div>
+        </div>
+
+        <div class="r-appendix">
+            <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
+            <div class="r-code-box">
+# Chapter 2: Multiple Regression
+
+library(tidyverse)
+library(caret)
+
+# Example dataset: Boston housing (simulated)
+set.seed(123)
+n <- 200
+data <- data.frame(
+    sqft = rnorm(n, 2000, 500),
+    bedrooms = sample(2:5, n, replace = TRUE),
+    age = runif(n, 0, 50),
+    price = 100000 + 250 * sqft + 15000 * bedrooms - 500 * age + rnorm(n, 0, 20000)
+)
+
+# Split data
+train_index <- createDataPartition(data$price, p = 0.7, list = FALSE)
+train <- data[train_index, ]
+test <- data[-train_index, ]
+
+# Fit linear regression
+model <- lm(price ~ ., data = train)
+
+# Summary and predictions
+summary(model)
+predictions <- predict(model, test)
+RMSE <- sqrt(mean((test$price - predictions)^2))
+MAE <- mean(abs(test$price - predictions))
+cat("RMSE:", RMSE, "\nMAE:", MAE)
+            </div>
+        </div>
+        <a href="#" class="back-top">⬆ Back to top</a>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHAPTER 3 -->
+    <div class="chapter-section hidden" id="ch3">
+        <div class="badge">Chapter 3</div>
+        <h3>Ridge &amp; Lasso – Regularization</h3>
+        <div class="core">📌 controlling overfitting · L2 (Ridge) · L1 (Lasso) · feature selection</div>
+        <div class="concept-text">
+            <strong>Key ideas:</strong> Regularization prevents overfitting by adding a penalty to large coefficients. <strong>Ridge (L2)</strong> shrinks coefficients toward zero but keeps all features – useful when many predictors matter. <strong>Lasso (L1)</strong> can set coefficients to exactly zero, performing feature selection – great for simplifying models and reducing data collection costs. Use cross-validation to find the best penalty strength (λ). For regression, RMSE on validation data helps select the best λ.
+        </div>
+
+        <div class="quiz-item"><p>1. 200 features, 500 rows, high variance. Which method also selects features?</p>
+            <ul><li>A) Ridge (L2)</li><li>B) Lasso (L1)</li><li>C) No regularization</li><li>D) PCA</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Lasso can shrink coefficients to zero, selecting features.</div>
+        </div>
+        <div class="quiz-item"><p>2. In Ridge, increasing penalty λ has what effect?</p>
+            <ul><li>A) Coefficients become larger</li><li>B) Coefficients shrink toward zero</li><li>C) Become negative</li><li>D) No effect</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Higher λ pushes coefficients toward zero, reducing variance.</div>
+        </div>
+        <div class="quiz-item"><p>3. Marketing wants a simple model with only top predictors. Which approach?</p>
+            <ul><li>A) Ridge with large λ</li><li>B) Lasso with cross-validated λ</li><li>C) Standard OLS</li><li>D) kNN</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Lasso selects a subset of features for simplicity.</div>
+        </div>
+        <div class="quiz-item"><p>4. Lasso gives 7 non-zero coefficients out of 30. Business benefit?</p>
+            <ul><li>A) Faster predictions and easier data collection</li><li>B) Higher R²</li><li>C) Causal interpretation</li><li>D) No benefit</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) Sparse model reduces data collection costs and simplifies deployment.</div>
+        </div>
+        <div class="quiz-item"><p>5. Why use cross-validation to choose λ?</p>
+            <ul><li>A) To increase training accuracy</li><li>B) To find λ that minimizes out-of-sample error (e.g., RMSE)</li><li>C) To eliminate all features</li><li>D) To speed up training</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Cross-validation selects λ that gives best performance on unseen data.</div>
+        </div>
+
+        <div class="r-appendix">
+            <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
+            <div class="r-code-box">
+# Chapter 3: Ridge & Lasso Regularization
+
+library(tidyverse)
+library(glmnet)
+
+# Simulate data with many features
+set.seed(123)
+n <- 200
+p <- 50
+X <- matrix(rnorm(n * p), n, p)
+beta <- rnorm(p)
+beta[20:50] <- 0  # only first 20 features matter
+y <- X %*% beta + rnorm(n, 0, 2)
+
+# Train/test split
+train_idx <- sample(1:n, 0.7 * n)
+X_train <- X[train_idx, ]
+y_train <- y[train_idx]
+X_test <- X[-train_idx, ]
+y_test <- y[-train_idx]
+
+# Lasso with cross-validation
+cv_lasso <- cv.glmnet(X_train, y_train, alpha = 1)
+best_lambda <- cv_lasso$lambda.min
+
+# Ridge with cross-validation
+cv_ridge <- cv.glmnet(X_train, y_train, alpha = 0)
+best_lambda_ridge <- cv_ridge$lambda.min
+
+# Predict and evaluate
+lasso_pred <- predict(cv_lasso, newx = X_test, s = best_lambda)
+ridge_pred <- predict(cv_ridge, newx = X_test, s = best_lambda_ridge)
+
+cat("Lasso RMSE:", sqrt(mean((y_test - lasso_pred)^2)))
+cat("Ridge RMSE:", sqrt(mean((y_test - ridge_pred)^2)))
+            </div>
+        </div>
+        <a href="#" class="back-top">⬆ Back to top</a>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHAPTER 4 -->
+    <div class="chapter-section hidden" id="ch4">
+        <div class="badge">Chapter 4</div>
+        <h3>Logistic Regression</h3>
+        <div class="core">📌 classification of categorical variables · probability · ROC/AUC · threshold tuning</div>
+        <div class="concept-text">
+            <strong>Key ideas:</strong> Logistic regression predicts the probability of a <strong>binary categorical outcome</strong> (e.g., churn / no churn, fraud / legit). The model outputs log-odds, which are converted to probabilities. For classification, use metrics like <strong>accuracy, precision, recall, F1, and ROC-AUC</strong>. Choose the <em>classification threshold</em> based on business costs – e.g., lower threshold to catch more fraud (higher recall) at the cost of more false alarms.
+        </div>
+
+        <div class="quiz-item"><p>1. Model outputs probability 0.35 for default. Threshold 0.5. Classification?</p>
+            <ul><li>A) Will default</li><li>B) Will not default</li><li>C) High risk</li><li>D) Undetermined</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) 0.35 < 0.5 → predicted NOT to default.</div>
+        </div>
+        <div class="quiz-item"><p>2. Fraud model: 90% recall, 60% precision. Which is true?</p>
+            <ul><li>A) Catch 90% of frauds, but 40% of flagged cases are false alarms</li><li>B) Catch 60% of frauds</li><li>C) Precision is more important</li><li>D) Useless</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) Recall = 90% of frauds caught; precision = 60% of flagged are true frauds.</div>
+        </div>
+        <div class="quiz-item"><p>3. Insurance sets low threshold (0.2). What trade-off?</p>
+            <ul><li>A) Lower recall, higher precision</li><li>B) Higher recall, lower precision (more false alarms)</li><li>C) No trade-off</li><li>D) Higher accuracy</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Lower threshold catches more positives (high recall) but increases false positives.</div>
+        </div>
+        <div class="quiz-item"><p>4. AUC of 0.88 indicates what?</p>
+            <ul><li>A) 88% accuracy</li><li>B) 88% chance model ranks a random positive higher than a random negative</li><li>C) 88% precision</li><li>D) Overfitting</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) AUC = probability that a random positive is ranked higher than a negative.</div>
+        </div>
+        <div class="quiz-item"><p>5. Coefficient for "email open rate" is 2.5. Interpretation?</p>
+            <ul><li>A) For each 1% increase in open rate, log-odds of response increase by 2.5</li><li>B) Open rate doesn't matter</li><li>C) Causal</li><li>D) Each open increases response by 2.5%</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) Logistic coefficients are in log-odds.</div>
+        </div>
+
+        <div class="r-appendix">
+            <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
+            <div class="r-code-box">
+# Chapter 4: Logistic Regression
+
+library(tidyverse)
+library(caret)
+library(pROC)
+
+# Simulate customer churn data
+set.seed(123)
+n <- 500
+data <- data.frame(
+    age = runif(n, 18, 70),
+    income = rnorm(n, 50000, 15000),
+    usage = rnorm(n, 100, 30),
+    churn = rbinom(n, 1, plogis(-2 + 0.02 * age - 0.00001 * income - 0.01 * usage))
+)
+data$churn <- as.factor(data$churn)
+
+# Split data
+train_index <- createDataPartition(data$churn, p = 0.7, list = FALSE)
+train <- data[train_index, ]
+test <- data[-train_index, ]
+
+# Train logistic regression
+model <- glm(churn ~ ., data = train, family = binomial)
+
+# Predict probabilities
+pred_probs <- predict(model, test, type = "response")
+pred_class <- ifelse(pred_probs > 0.5, 1, 0)
+
+# Confusion matrix and AUC
+confusionMatrix(as.factor(pred_class), test$churn)
+roc_obj <- roc(test$churn, pred_probs)
+auc(roc_obj)
+            </div>
+        </div>
+        <a href="#" class="back-top">⬆ Back to top</a>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHAPTER 5 -->
+    <div class="chapter-section hidden" id="ch5">
+        <div class="badge">Chapter 5</div>
+        <h3>CART – Decision Trees</h3>
+        <div class="core">📌 both regression &amp; classification · Gini/entropy · pruning · business rules</div>
+        <div class="concept-text">
+            <strong>Key ideas:</strong> Decision trees can handle <strong>both regression (quantitative prediction) and classification (categorical prediction)</strong>. Splits are chosen to maximize purity (Gini or entropy for classification; MSE for regression). <em>Pruning</em> removes branches that overfit, making the tree simpler. Trees are great for extracting actionable business rules (e.g., "if income > $75k and age < 30 then high-value customer").
+        </div>
+
+        <div class="quiz-item"><p>1. Root split: "income > $75k". What does this represent?</p>
+            <ul><li>A) A simple business rule: high vs low income</li><li>B) The most important feature</li><li>C) Both A and B</li><li>D) Overfitting</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ C) Root split is the most important differentiator and a clear rule.</div>
+        </div>
+        <div class="quiz-item"><p>2. Prune from 50 leaves to 12. Business benefit?</p>
+            <ul><li>A) Simpler, more understandable rules</li><li>B) Higher training accuracy</li><li>C) More complex rules</li><li>D) No benefit</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) Pruning reduces complexity, making tree easier to explain.</div>
+        </div>
+        <div class="quiz-item"><p>3. Leaf: "amount > $500 AND location = international AND time = night". Interpretation?</p>
+            <ul><li>A) Actionable risk pattern for fraud alerts</li><li>B) Tree is too complicated</li><li>C) Amount is the only factor</li><li>D) Location doesn't matter</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) This is an actionable rule for fraud detection.</div>
+        </div>
+        <div class="quiz-item"><p>4. What metric does a classification tree use to decide splits?</p>
+            <ul><li>A) R²</li><li>B) Gini impurity or entropy</li><li>C) RMSE</li><li>D) AUC</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Gini or entropy measure purity of child nodes.</div>
+        </div>
+        <div class="quiz-item"><p>5. Leaf: 90% churn for "tenure < 12 months AND support_calls > 5". Action?</p>
+            <ul><li>A) Ignore</li><li>B) Proactively reach out to new customers with many support calls</li><li>C) Remove tenure</li><li>D) Use this as the only rule</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) This is a high-risk segment – intervention can reduce churn.</div>
+        </div>
+
+        <div class="r-appendix">
+            <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
+            <div class="r-code-box">
+# Chapter 5: CART – Decision Trees
+
+library(tidyverse)
+library(rpart)
+library(rpart.plot)
+
+# Use iris dataset for classification tree
+data(iris)
+set.seed(123)
+train_index <- sample(1:nrow(iris), 0.7 * nrow(iris))
+train <- iris[train_index, ]
+test <- iris[-train_index, ]
+
+# Train decision tree
+tree_model <- rpart(Species ~ ., data = train, method = "class",
+                    control = rpart.control(cp = 0.01, minsplit = 5))
+
+# Plot tree
+rpart.plot(tree_model, extra = 1)
+
+# Prune using cross-validation
+printcp(tree_model)
+pruned_tree <- prune(tree_model, cp = 0.02)
+
+# Predictions
+pred <- predict(pruned_tree, test, type = "class")
+confusionMatrix(pred, test$Species)
+            </div>
+        </div>
+        <a href="#" class="back-top">⬆ Back to top</a>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHAPTER 6 -->
+    <div class="chapter-section hidden" id="ch6">
+        <div class="badge">Chapter 6</div>
+        <h3>k-Nearest Neighbors</h3>
+        <div class="core">📌 both regression &amp; classification · distance metrics · choosing k · scaling</div>
+        <div class="concept-text">
+            <strong>Key ideas:</strong> kNN predicts based on the "k" most similar training examples. It can be used for <strong>both classification (majority vote) and regression (average of neighbors)</strong>. Distance metrics (e.g., Euclidean) measure similarity. <em>Feature scaling</em> is critical – otherwise features with large ranges dominate. Choosing k is a trade-off: small k overfits, large k smoothes. Performance metrics depend on the task: accuracy/F1 for classification, RMSE/MAE for regression.
+        </div>
+
+        <div class="quiz-item"><p>1. Using kNN with 100 features. Key preprocessing step?</p>
+            <ul><li>A) Remove all features</li><li>B) Scale features so large numbers don't dominate</li><li>C) Use only one feature</li><li>D) No preprocessing</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Feature scaling is critical.</div>
+        </div>
+        <div class="quiz-item"><p>2. k=1 gives 100% train, 60% test. What is happening?</p>
+            <ul><li>A) Underfitting</li><li>B) Overfitting – memorizes training points</li><li>C) Data leakage</li><li>D) k is too large</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) k=1 is highly sensitive to noise; increase k.</div>
+        </div>
+        <div class="quiz-item"><p>3. Add "age" (0–100) without scaling. Effect?</p>
+            <ul><li>A) No effect</li><li>B) Age will dominate distance</li><li>C) Age ignored</li><li>D) More accurate</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Unscaled features with large ranges dominate.</div>
+        </div>
+        <div class="quiz-item"><p>4. Retail uses kNN with 50 attributes. What challenge?</p>
+            <ul><li>A) Curse of dimensionality – distance becomes less meaningful</li><li>B) Too fast</li><li>C) No challenge</li><li>D) Doesn't work with numeric data</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) In high dimensions, all points become far apart.</div>
+        </div>
+        <div class="quiz-item"><p>5. Increase k from 3 to 15. Business impact?</p>
+            <ul><li>A) Predictions become more stable (less sensitive to outliers)</li><li>B) More erratic</li><li>C) Training accuracy increases</li><li>D) No change</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) Larger k smooths decisions.</div>
+        </div>
+
+        <div class="r-appendix">
+            <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
+            <div class="r-code-box">
+# Chapter 6: k-Nearest Neighbors
+
+library(tidyverse)
+library(caret)
+
+# Use iris dataset
+data(iris)
+set.seed(123)
+
+# Scale features (critical for kNN!)
+preprocess <- preProcess(iris[, -5], method = c("center", "scale"))
+iris_scaled <- predict(preprocess, iris)
+iris_scaled$Species <- iris$Species
+
+# Split data
+train_index <- createDataPartition(iris_scaled$Species, p = 0.7, list = FALSE)
+train <- iris_scaled[train_index, ]
+test <- iris_scaled[-train_index, ]
+
+# Train kNN with cross-validation for k selection
+knn_model <- train(Species ~ ., data = train, method = "knn",
+                   trControl = trainControl(method = "cv", number = 5),
+                   tuneGrid = data.frame(k = seq(1, 20, 2)))
+
+# Best k
+knn_model$bestTune
+
+# Predictions
+pred <- predict(knn_model, test)
+confusionMatrix(pred, test$Species)
+            </div>
+        </div>
+        <a href="#" class="back-top">⬆ Back to top</a>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHAPTER 7 -->
+    <div class="chapter-section hidden" id="ch7">
+        <div class="badge">Chapter 7</div>
+        <h3>Deep Learning</h3>
+        <div class="core">📌 both regression &amp; classification · layers · dropout · overfitting</div>
+        <div class="concept-text">
+            <strong>Key ideas:</strong> Deep learning uses neural networks with multiple layers to learn complex patterns. It can handle <strong>both regression and classification</strong> tasks. <em>Activation functions</em> (e.g., ReLU) introduce non-linearity. <em>Dropout</em> randomly turns off neurons during training to prevent overfitting. Choose the right loss function (MSE for regression; cross-entropy for classification) and metrics (RMSE/MAE for regression; accuracy/F1 for classification).
+        </div>
+
+        <div class="quiz-item"><p>1. 10 million images, 100 categories. Which approach?</p>
+            <ul><li>A) Linear regression</li><li>B) Deep learning (CNN)</li><li>C) kNN</li><li>D) Logistic regression</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Deep learning excels at image classification with large datasets.</div>
+        </div>
+        <div class="quiz-item"><p>2. 20M parameters, 50k examples. Biggest risk?</p>
+            <ul><li>A) Underfitting</li><li>B) Overfitting</li><li>C) Too fast training</li><li>D) No risk</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Large models with limited data are prone to overfitting.</div>
+        </div>
+        <div class="quiz-item"><p>3. Dropout rate 0.5. Business benefit?</p>
+            <ul><li>A) Reduces overfitting by randomly dropping neurons</li><li>B) Increases training speed</li><li>C) Guarantees higher accuracy</li><li>D) Removes feature engineering</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) Dropout is a regularization technique.</div>
+        </div>
+        <div class="quiz-item"><p>4. Retail forecasts daily sales. Drawback of deep learning vs simpler model?</p>
+            <ul><li>A) Always less accurate</li><li>B) Requires more data and compute; simpler may be sufficient</li><li>C) Cannot handle time series</li><li>D) No drawback</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) For simpler tasks, deep learning may be overkill.</div>
+        </div>
+        <div class="quiz-item"><p>5. Training loss decreases but validation loss increases after epoch 10. Action?</p>
+            <ul><li>A) Continue to 50</li><li>B) Early stopping to prevent overfitting</li><li>C) Increase learning rate</li><li>D) Remove all hidden layers</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Classic sign of overfitting; early stopping prevents further degradation.</div>
+        </div>
+
+        <div class="r-appendix">
+            <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
+            <div class="r-code-box">
+# Chapter 7: Deep Learning with keras
+
+library(tidyverse)
+library(keras)
+
+# Simulate a simple classification problem
+set.seed(123)
+n <- 1000
+X <- matrix(rnorm(n * 10), n, 10)
+y <- ifelse(X[,1] + X[,2] + rnorm(n, 0, 0.5) > 0, 1, 0)
+
+# Train/test split
+train_idx <- sample(1:n, 0.7 * n)
+X_train <- X[train_idx, ]
+y_train <- y[train_idx]
+X_test <- X[-train_idx, ]
+y_test <- y[-train_idx]
+
+# Build neural network
+model <- keras_model_sequential() %>%
+    layer_dense(units = 32, activation = "relu", input_shape = 10) %>%
+    layer_dropout(rate = 0.3) %>%
+    layer_dense(units = 16, activation = "relu") %>%
+    layer_dropout(rate = 0.2) %>%
+    layer_dense(units = 1, activation = "sigmoid")
+
+# Compile
+model %>% compile(
+    loss = "binary_crossentropy",
+    optimizer = "adam",
+    metrics = "accuracy"
+)
+
+# Train
+history <- model %>% fit(
+    X_train, y_train,
+    epochs = 50,
+    batch_size = 32,
+    validation_split = 0.2,
+    verbose = 0
+)
+
+# Evaluate
+model %>% evaluate(X_test, y_test)
+            </div>
+        </div>
+        <a href="#" class="back-top">⬆ Back to top</a>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHAPTER 8 – CLUSTERING -->
+    <div class="chapter-section hidden" id="ch8">
+        <div class="badge">Chapter 8</div>
+        <h3>Clustering</h3>
+        <div class="core">📌 unsupervised · k-means · hierarchical · DBSCAN · silhouette score</div>
+        <div class="concept-text">
+            <strong>Key ideas:</strong> Clustering finds natural groups in unlabeled data (unsupervised learning). <em>k-means</em> partitions data into k clusters based on centroids. <em>Hierarchical</em> builds a tree of clusters. <em>DBSCAN</em> finds clusters of arbitrary shape. Use <em>silhouette score</em> to evaluate cluster quality. In business, clustering helps with customer segmentation, market basket analysis, and anomaly detection. Since it's unsupervised, there are no labels – evaluation is based on internal cohesion and separation.
+        </div>
+
+        <div class="quiz-item"><p>1. Marketing wants to segment customers by purchase behavior. Which method?</p>
+            <ul><li>A) Logistic regression</li><li>B) k-means clustering</li><li>C) Linear regression</li><li>D) SVM</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) k-means is standard for customer segmentation.</div>
+        </div>
+        <div class="quiz-item"><p>2. k-means with k=5 gives silhouette 0.72. What does this mean?</p>
+            <ul><li>A) Clusters are poorly separated</li><li>B) Clusters are reasonably well-separated</li><li>C) k is too large</li><li>D) Data not suitable</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Silhouette near 1 = good separation.</div>
+        </div>
+        <div class="quiz-item"><p>3. One cluster has 80% of customers. Business insight?</p>
+            <ul><li>A) Data is not clusterable</li><li>B) Most customers are "average" – majority with niche groups</li><li>C) Use k=1</li><li>D) Perfectly balanced</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Large majority suggests a core customer base with niche segments.</div>
+        </div>
+        <div class="quiz-item"><p>4. Logistics clusters delivery zones. Which metric evaluates cluster quality?</p>
+            <ul><li>A) Inertia (within-cluster sum of squares) – lower is better</li><li>B) Accuracy</li><li>C) Precision</li><li>D) p-values</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) Inertia measures cluster compactness.</div>
+        </div>
+        <div class="quiz-item"><p>5. Data has non-spherical (elongated) clusters. Which method is better?</p>
+            <ul><li>A) DBSCAN or hierarchical clustering</li><li>B) k-means with larger k</li><li>C) Logistic regression</li><li>D) PCA</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) DBSCAN finds arbitrary-shaped clusters.</div>
+        </div>
+
+        <div class="r-appendix">
+            <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
+            <div class="r-code-box">
+# Chapter 8: Clustering
+
+library(tidyverse)
+library(cluster)
+library(factoextra)
+
+# Use iris data (remove labels for clustering)
+data <- iris[, -5]
+set.seed(123)
+
+# Scale data
+data_scaled <- scale(data)
+
+# k-means with k=3
+kmeans_result <- kmeans(data_scaled, centers = 3, nstart = 25)
+
+# Visualize clusters
+fviz_cluster(kmeans_result, data = data_scaled,
+             ellipse.type = "norm",
+             palette = "jco",
+             ggtheme = theme_minimal())
+
+# Silhouette score
+sil <- silhouette(kmeans_result$cluster, dist(data_scaled))
+mean(sil[, 3])
+
+# Hierarchical clustering
+hc <- hclust(dist(data_scaled), method = "ward.D2")
+fviz_dend(hc, k = 3, rect = TRUE)
+            </div>
+        </div>
+        <a href="#" class="back-top">⬆ Back to top</a>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHAPTER 9 – ENSEMBLE -->
+    <div class="chapter-section hidden" id="ch9">
+        <div class="badge">Chapter 9</div>
+        <h3>Ensemble Methods</h3>
+        <div class="core">📌 bagging · boosting · variance/bias reduction · both regression &amp; classification</div>
+        <div class="concept-text">
+            <strong>Key ideas:</strong> Ensemble methods combine multiple models to improve performance. <em>Bagging</em> (e.g., Random Forest) reduces variance by averaging many trees – works for both regression and classification. <em>Boosting</em> (e.g., XGBoost) sequentially corrects errors, reducing bias. For regression, use RMSE/MAE; for classification, use accuracy/F1/ROC-AUC. Ensembles are powerful but can be harder to interpret – in business, they often deliver state-of-the-art accuracy for churn, fraud, and demand forecasting.
+        </div>
+
+        <div class="quiz-item"><p>1. Single tree has high variance. Which ensemble reduces variance by averaging?</p>
+            <ul><li>A) AdaBoost</li><li>B) Random Forest (bagging)</li><li>C) Gradient Boosting</li><li>D) Logistic regression</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Random Forest averages many trees to reduce variance.</div>
+        </div>
+        <div class="quiz-item"><p>2. Highest accuracy for churn model with large dataset. Which ensemble often wins?</p>
+            <ul><li>A) XGBoost (gradient boosting)</li><li>B) Linear regression</li><li>C) kNN</li><li>D) PCA</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) XGBoost is known for high performance.</div>
+        </div>
+        <div class="quiz-item"><p>3. In boosting, each tree focuses on errors of previous trees. What does this mean?</p>
+            <ul><li>A) Reduces both bias and variance</li><li>B) Always overfits</li><li>C) Slower but more accurate than bagging</li><li>D) Both A and C</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ D) Boosting reduces bias; can be computationally intensive.</div>
+        </div>
+        <div class="quiz-item"><p>4. Retail uses Random Forest with 100 trees. Advantage over single tree?</p>
+            <ul><li>A) More stable predictions – less sensitive to data changes</li><li>B) Faster</li><li>C) Simpler to explain</li><li>D) No advantage</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) Averaging produces more robust predictions.</div>
+        </div>
+        <div class="quiz-item"><p>5. Model is underfitting (high bias). Which ensemble reduces bias?</p>
+            <ul><li>A) Bagging (Random Forest)</li><li>B) Boosting (e.g., Gradient Boosting)</li><li>C) kNN</li><li>D) Ridge</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Boosting iteratively improves weak learners.</div>
+        </div>
+
+        <div class="r-appendix">
+            <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
+            <div class="r-code-box">
+# Chapter 9: Ensemble Methods
+
+library(tidyverse)
+library(caret)
+library(randomForest)
+library(xgboost)
+
+# Use iris dataset
+data(iris)
+set.seed(123)
+
+# Split data
+train_index <- createDataPartition(iris$Species, p = 0.7, list = FALSE)
+train <- iris[train_index, ]
+test <- iris[-train_index, ]
+
+# Random Forest
+rf_model <- randomForest(Species ~ ., data = train, ntree = 100)
+rf_pred <- predict(rf_model, test)
+confusionMatrix(rf_pred, test$Species)
+
+# XGBoost
+xgb_train <- xgb.DMatrix(data = as.matrix(train[, -5]),
+                         label = as.numeric(train$Species) - 1)
+xgb_test <- xgb.DMatrix(data = as.matrix(test[, -5]))
+
+xgb_model <- xgboost(data = xgb_train,
+                     max_depth = 3,
+                     eta = 0.3,
+                     nrounds = 50,
+                     objective = "multi:softmax",
+                     num_class = 3,
+                     verbose = 0)
+
+xgb_pred <- predict(xgb_model, xgb_test)
+confusionMatrix(as.factor(xgb_pred + 1), test$Species)
+            </div>
+        </div>
+        <a href="#" class="back-top">⬆ Back to top</a>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHAPTER 10 – SVM -->
+    <div class="chapter-section hidden" id="ch10">
+        <div class="badge">Chapter 10</div>
+        <h3>Support Vector Machines</h3>
+        <div class="core">📌 classification · maximal margin · kernel trick · soft margin (C)</div>
+        <div class="concept-text">
+            <strong>Key ideas:</strong> SVM finds the hyperplane that maximizes the margin between classes (classification). <em>Support vectors</em> are the critical points that define the margin. The <em>kernel trick</em> (e.g., RBF) allows non-linear classification by mapping data to higher dimensions. The <em>C parameter</em> controls the trade-off between margin width and misclassification – a business choice between simplicity and accuracy. For classification, use accuracy, precision, recall, or F1 depending on business costs.
+        </div>
+
+        <div class="quiz-item"><p>1. Data is not linearly separable. Which SVM technique handles this?</p>
+            <ul><li>A) Linear SVM with C=0</li><li>B) Kernel trick (RBF or polynomial)</li><li>C) No solution</li><li>D) Logistic regression</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Kernels map data to higher dimensions for non-linear separation.</div>
+        </div>
+        <div class="quiz-item"><p>2. Support vectors are the points that:</p>
+            <ul><li>A) Are farthest from the boundary</li><li>B) Lie closest to the boundary and define the margin</li><li>C) Are outliers</li><li>D) Are random</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Support vectors determine the margin.</div>
+        </div>
+        <div class="quiz-item"><p>3. Increase soft margin parameter C. Business trade-off?</p>
+            <ul><li>A) Lower C = wider margin, more misclassifications</li><li>B) Higher C = narrower margin, fewer misclassifications, risk of overfitting</li><li>C) Both A and B</li><li>D) No effect</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ C) C controls penalty – a business choice between complexity and accuracy.</div>
+        </div>
+        <div class="quiz-item"><p>4. Bank wants conservative model (fewer false positives – bad loans). How to adjust threshold?</p>
+            <ul><li>A) Lower threshold</li><li>B) Raise threshold to be more conservative</li><li>C) No adjustment</li><li>D) Use regression</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Higher threshold means fewer approvals, reducing false positives.</div>
+        </div>
+        <div class="quiz-item"><p>5. RBF kernel: what does gamma control?</p>
+            <ul><li>A) Influence of a single training example – high gamma = local influence</li><li>B) Learning rate</li><li>C) Number of support vectors</li><li>D) Intercept</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) Gamma defines how far the influence of a single example reaches.</div>
+        </div>
+
+        <div class="r-appendix">
+            <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
+            <div class="r-code-box">
+# Chapter 10: Support Vector Machines
+
+library(tidyverse)
+library(e1071)
+library(caret)
+
+# Use iris dataset
+data(iris)
+set.seed(123)
+
+# Split data
+train_index <- createDataPartition(iris$Species, p = 0.7, list = FALSE)
+train <- iris[train_index, ]
+test <- iris[-train_index, ]
+
+# SVM with RBF kernel
+svm_model <- svm(Species ~ ., data = train,
+                 kernel = "radial",
+                 cost = 1,
+                 gamma = 0.1,
+                 probability = TRUE)
+
+# Predictions
+svm_pred <- predict(svm_model, test)
+confusionMatrix(svm_pred, test$Species)
+
+# Tune parameters
+tune_result <- tune(svm, Species ~ ., data = train,
+                    kernel = "radial",
+                    ranges = list(cost = c(0.1, 1, 10),
+                                  gamma = c(0.01, 0.1, 1)))
+
+best_model <- tune_result$best.model
+best_pred <- predict(best_model, test)
+confusionMatrix(best_pred, test$Species)
+            </div>
+        </div>
+        <a href="#" class="back-top">⬆ Back to top</a>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- CHAPTER 11 – PCA -->
+    <div class="chapter-section hidden" id="ch11">
+        <div class="badge">Chapter 11</div>
+        <h3>PCA – Principal Component Analysis</h3>
+        <div class="core">📌 dimensionality reduction · explained variance · data compression</div>
+        <div class="concept-text">
+            <strong>Key ideas:</strong> PCA reduces the number of features while preserving as much variance as possible. It creates new uncorrelated variables (principal components) that are linear combinations of the original features. Use a <em>scree plot</em> to decide how many components to keep. In business, PCA helps with data compression, visualization, and speeding up other models – but you lose interpretability of original features. It's a preprocessing step, not a predictive model itself.
+        </div>
+
+        <div class="quiz-item"><p>1. 200 correlated features → 10 PCs explain 85% variance. Business benefit?</p>
+            <ul><li>A) Faster training and less storage</li><li>B) Perfectly uncorrelated features</li><li>C) Higher accuracy</li><li>D) No benefit</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) PCA reduces dimensionality, speeding up downstream tasks.</div>
+        </div>
+        <div class="quiz-item"><p>2. Scree plot: first 3 components explain 70% variance, then flattens. How many to choose?</p>
+            <ul><li>A) 3 – the elbow point</li><li>B) 200</li><li>C) 1</li><li>D) None</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) The elbow is where additional components add little explanatory power.</div>
+        </div>
+        <div class="quiz-item"><p>3. Retail reduces 50 survey questions to 5 components, then clusters. Advantage?</p>
+            <ul><li>A) Easier interpretation – each component captures a theme</li><li>B) Data becomes non-linear</li><li>C) Accuracy always improves</li><li>D) No interpretation</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) PCA components often correspond to underlying business dimensions.</div>
+        </div>
+        <div class="quiz-item"><p>4. Apply PCA without scaling. "Revenue" ($0–$1M) and "age" (0–100). What happens?</p>
+            <ul><li>A) No effect</li><li>B) Revenue dominates because of its scale</li><li>C) Age dominates</li><li>D) Equal importance</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ B) Scaling is critical; high-variance features dominate.</div>
+        </div>
+        <div class="quiz-item"><p>5. PCA explains 90% variance with 15 components. Use in regression instead of 100 original features. Outcome?</p>
+            <ul><li>A) Simpler, faster training – but lose interpretability of original features</li><li>B) Accuracy drops to 0%</li><li>C) Cannot predict</li><li>D) No change</li></ul>
+            <button class="btn-answer" onclick="toggleAnswer(this)">Show answer</button>
+            <div class="answer-box">✅ A) PCA trades interpretability for simplicity and speed.</div>
+        </div>
+
+        <div class="r-appendix">
+            <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
+            <div class="r-code-box">
+# Chapter 11: Principal Component Analysis (PCA)
+
+library(tidyverse)
+library(factoextra)
+
+# Use iris dataset
+data(iris)
+features <- iris[, -5]
+
+# Scale features (critical for PCA)
+features_scaled <- scale(features)
+
+# Perform PCA
+pca_result <- prcomp(features_scaled, center = FALSE, scale. = FALSE)
+
+# Summary of explained variance
+summary(pca_result)
+
+# Scree plot
+fviz_eig(pca_result, addlabels = TRUE)
+
+# Visualize PCA
+fviz_pca_ind(pca_result, 
+             col.ind = iris$Species,
+             palette = "jco",
+             addEllipses = TRUE,
+             ellipse.level = 0.95)
+
+# Use PCA components for further analysis (e.g., clustering)
+pca_data <- as.data.frame(pca_result$x[, 1:2])
+pca_data$Species <- iris$Species
+
+# Check correlation between original features and PCs
+cor(features_scaled, pca_result$x[, 1:2])
+            </div>
+        </div>
+        <a href="#" class="back-top">⬆ Back to top</a>
+    </div>
+
+    <hr>
+    <div style="text-align:center; color:#1f4a66; font-size:0.95rem; margin-top:1.5rem;">
+        📚 All 11 chapters · Concept introductions · Interactive quizzes · R code appendix
+    </div>
+
+</div>
+
+<script>
+    // Dropdown navigation
+    function showChapter(chapterId) {
+        // Hide all chapters
+        const sections = document.querySelectorAll('.chapter-section');
+        sections.forEach(section => {
+            section.classList.add('hidden');
+        });
+        // Show selected chapter
+        const target = document.getElementById(chapterId);
+        if (target) {
+            target.classList.remove('hidden');
+        }
+        // Scroll to top of the chapter
+        if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    // Toggle quiz answers
+    function toggleAnswer(btn) {
+        const box = btn.nextElementSibling;
+        if (box.classList.contains('show')) {
+            box.classList.remove('show');
+            btn.textContent = 'Show answer';
+        } else {
+            box.classList.add('show');
+            btn.textContent = 'Hide answer';
+        }
+    }
+
+    // Toggle R code
+    function toggleRCode(btn) {
+        const box = btn.nextElementSibling;
+        if (box.classList.contains('show')) {
+            box.classList.remove('show');
+            btn.textContent = '📊 Show R Code';
+        } else {
+            box.classList.add('show');
+            btn.textContent = '📊 Hide R Code';
+        }
+    }
+
+    // Show first chapter by default
+    document.addEventListener('DOMContentLoaded', function() {
+        showChapter('ch1');
+        document.getElementById('chapterSelect').value = 'ch1';
+    });
+</script>
+
+</body>
+</html>
