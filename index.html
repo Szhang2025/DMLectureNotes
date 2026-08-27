@@ -31,7 +31,6 @@
             padding-bottom: 0.8rem;
             margin-bottom: 1.5rem;
         }
-        /* Dropdown navigation */
         .chapter-selector {
             margin-bottom: 2rem;
             display: flex;
@@ -83,6 +82,74 @@
         .concept-text strong { color: #0B3B5C; }
         .concept-text ul { margin: 0.5rem 0 0 1.5rem; }
         .concept-text ul li { margin-bottom: 0.2rem; }
+        .concept-trigger {
+            color: #0B3B5C;
+            font-weight: 700;
+            background: #d9e6f2;
+            padding: 0.1rem 0.6rem;
+            border-radius: 30px;
+            cursor: pointer;
+            display: inline-block;
+            border: 1px solid #b0c8db;
+            transition: 0.15s;
+            font-size: 0.95rem;
+        }
+        .concept-trigger:hover {
+            background: #b8d0e5;
+            border-color: #1abc9c;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+        }
+        .popup-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 20, 30, 0.6);
+            backdrop-filter: blur(3px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        .popup-overlay.active { display: flex; }
+        .popup-card {
+            background: white;
+            max-width: 550px;
+            width: 90%;
+            padding: 2rem 2rem 1.8rem;
+            border-radius: 32px;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.3);
+            position: relative;
+            animation: popIn 0.2s ease;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.9); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .popup-card h4 {
+            font-size: 1.4rem;
+            color: #0B3B5C;
+            margin-bottom: 0.5rem;
+            border-bottom: 2px solid #1abc9c;
+            padding-bottom: 0.4rem;
+        }
+        .popup-card p {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #1e2b3c;
+            margin-top: 0.5rem;
+        }
+        .popup-close {
+            background: #1e293b;
+            color: white;
+            border: none;
+            padding: 0.4rem 1.5rem;
+            border-radius: 60px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 1rem;
+            transition: 0.15s;
+        }
+        .popup-close:hover { background: #0B3B5C; }
         .quiz-item { background: white; border-radius: 16px; padding: 1.2rem 1.5rem; margin-bottom: 1rem; border: 1px solid #dce5ed; }
         .quiz-item p { font-weight: 600; margin-bottom: 0.3rem; }
         .quiz-item ul { padding-left: 1.5rem; margin: 0.3rem 0; }
@@ -91,8 +158,6 @@
         .btn-answer:hover { background: #0b3b5c; }
         .answer-box { background: #e6f2f0; padding: 0.5rem 1rem; border-radius: 30px; color: #0b3b5c; font-weight: 500; display: none; margin-top: 0.5rem; }
         .answer-box.show { display: inline-block; }
-
-        /* R Code Appendix */
         .r-appendix {
             margin-top: 1.5rem;
             border-top: 2px dashed #c0d4e0;
@@ -125,7 +190,6 @@
             word-break: break-word;
         }
         .r-code-box.show { display: block; }
-
         .back-top { display: inline-block; margin: 1rem 0 0.5rem; color: #1abc9c; font-weight: 600; text-decoration: none; }
         .back-top:hover { text-decoration: underline; }
         hr { margin: 1.5rem 0; border: none; height: 2px; background: linear-gradient(90deg, #c0d4e0, transparent); }
@@ -137,7 +201,6 @@
 
     <h1>📘 Introduction to Machine Learning<br><span style="font-size:1.2rem; -webkit-text-fill-color:#1f4a66; background:none;">11 Chapters – Concepts, Quizzes &amp; R Code</span></h1>
 
-    <!-- DROPDOWN NAVIGATION -->
     <div class="chapter-selector">
         <label for="chapterSelect">📂 Jump to chapter:</label>
         <select id="chapterSelect" onchange="showChapter(this.value)">
@@ -155,19 +218,26 @@
         </select>
     </div>
 
-    <!-- ============================================================ -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-card">
+            <h4 id="popupTitle">Concept</h4>
+            <p id="popupContent">Detailed explanation.</p>
+            <button class="popup-close" onclick="closePopup()">Close</button>
+        </div>
+    </div>
+
     <!-- CHAPTER 1 -->
     <div class="chapter-section" id="ch1">
         <div class="badge">Chapter 1</div>
         <h3>Overview – Foundations of ML</h3>
         <div class="core">📌 supervised vs unsupervised · prediction · classification · performance metrics</div>
         <div class="concept-text">
-            <strong>Key ideas:</strong> <strong>Supervised learning</strong> uses labeled data to make predictions. It includes two main tasks:
+            <strong>Key ideas:</strong> Supervised learning uses labeled data to make predictions. It includes two main tasks:
             <ul>
                 <li><strong>Prediction of a quantitative variable</strong> (regression) – e.g., forecasting sales, delivery time, customer lifetime value.</li>
                 <li><strong>Classification of categorical variables</strong> – e.g., churn (yes/no), fraud (fraud/legit), customer segment (premium/basic).</li>
             </ul>
-            <strong>Performance metrics vary</strong> by task: for regression, use RMSE, MAE, or R². For classification, use accuracy, precision, recall, F1, or ROC-AUC. Choose metrics that align with business costs and objectives.
+            <strong>Performance metrics vary</strong> by task: for regression, use <span class="concept-trigger" data-title="RMSE (Root Mean Squared Error)" data-desc="The square root of the average squared differences between predicted and actual values. Penalizes large errors heavily. In the same units as the target variable. Lower is better.">RMSE</span>, <span class="concept-trigger" data-title="MAE (Mean Absolute Error)" data-desc="The average absolute difference between predicted and actual values. Easier to interpret than RMSE because it's in the same units. Lower is better.">MAE</span>, or <span class="concept-trigger" data-title="R² (Coefficient of Determination)" data-desc="The proportion of variance in the dependent variable that is predictable from the independent variables. Ranges from 0 to 1. Higher is better (1 = perfect fit).">R²</span>. For classification, use <span class="concept-trigger" data-title="Accuracy" data-desc="The proportion of correct predictions among total predictions. (TP + TN) / (TP + TN + FP + FN). Good for balanced datasets, but can be misleading for imbalanced classes.">accuracy</span>, <span class="concept-trigger" data-title="Precision" data-desc="The proportion of positive identifications that were actually correct. TP / (TP + FP). Answers: 'Of all predicted positives, how many are actually positive?' Important when false positives are costly.">precision</span>, <span class="concept-trigger" data-title="Recall (Sensitivity)" data-desc="The proportion of actual positives that were correctly identified. TP / (TP + FN). Answers: 'Of all actual positives, how many did we catch?' Important when false negatives are costly.">recall</span>, <span class="concept-trigger" data-title="F1 Score" data-desc="The harmonic mean of precision and recall. 2 * (Precision * Recall) / (Precision + Recall). A balanced metric that considers both false positives and false negatives.">F1</span>, or <span class="concept-trigger" data-title="ROC-AUC" data-desc="ROC (Receiver Operating Characteristic) curve plots True Positive Rate vs False Positive Rate. AUC (Area Under the Curve) measures the model's ability to distinguish between classes. 0.5 = random, 1.0 = perfect. Higher is better.">ROC-AUC</span>. Choose metrics that align with business costs and objectives.
         </div>
 
         <div class="quiz-item"><p>1. A retail company wants to predict which customers are likely to churn. This is a:</p>
@@ -196,29 +266,20 @@
             <div class="answer-box">✅ B) Overfitting – model memorized training but fails to generalize.</div>
         </div>
 
-        <!-- R Code Appendix -->
         <div class="r-appendix">
             <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
             <div class="r-code-box">
 # Chapter 1: Overview – Foundations of ML
-
-# Load required libraries
 library(tidyverse)
 library(caret)
-
-# Example: Split data into train/test
 set.seed(123)
 data <- iris
 train_index <- createDataPartition(data$Species, p = 0.7, list = FALSE)
 train <- data[train_index, ]
 test <- data[-train_index, ]
-
-# Train a simple classification model (kNN)
 model <- train(Species ~ ., data = train, method = "knn",
                trControl = trainControl(method = "cv", number = 5),
                tuneLength = 5)
-
-# Predict and evaluate
 predictions <- predict(model, test)
 confusionMatrix(predictions, test$Species)
             </div>
@@ -226,14 +287,13 @@ confusionMatrix(predictions, test$Species)
         <a href="#" class="back-top">⬆ Back to top</a>
     </div>
 
-    <!-- ============================================================ -->
     <!-- CHAPTER 2 -->
     <div class="chapter-section hidden" id="ch2">
         <div class="badge">Chapter 2</div>
         <h3>Multiple Regression</h3>
         <div class="core">📌 predicting quantitative variables · interpreting coefficients · feature importance</div>
         <div class="concept-text">
-            <strong>Key ideas:</strong> Multiple regression models the relationship between several predictors and a <strong>quantitative outcome</strong> (e.g., sales, price, demand). Coefficients show the expected change in the outcome per unit change in the predictor, holding others fixed. For regression tasks, use metrics like <strong>RMSE</strong> (root mean squared error) or <strong>MAE</strong> (mean absolute error) to evaluate performance – these are more business-interpretable than R² alone. Watch for multicollinearity (highly correlated predictors) which makes coefficients unstable.
+            <strong>Key ideas:</strong> Multiple regression models the relationship between several predictors and a <strong>quantitative outcome</strong> (e.g., sales, price, demand). Coefficients show the expected change in the outcome per unit change in the predictor, holding others fixed. For regression tasks, use metrics like <span class="concept-trigger" data-title="RMSE (Root Mean Squared Error)" data-desc="The square root of the average squared differences between predicted and actual values. Penalizes large errors heavily. In the same units as the target variable. Lower is better.">RMSE</span> (root mean squared error) or <span class="concept-trigger" data-title="MAE (Mean Absolute Error)" data-desc="The average absolute difference between predicted and actual values. Easier to interpret than RMSE because it's in the same units. Lower is better.">MAE</span> (mean absolute error) to evaluate performance – these are more business-interpretable than R² alone. Watch for <span class="concept-trigger" data-title="Multicollinearity" data-desc="A situation where two or more predictor variables are highly correlated (e.g., r > 0.8). This makes coefficient estimates unstable and hard to interpret. Can be detected using VIF (Variance Inflation Factor).">multicollinearity</span> (highly correlated predictors) which makes coefficients unstable. <span class="concept-trigger" data-title="Prediction Interval" data-desc="A range that is likely to contain the value of a single new observation. Wider than a confidence interval. For a 95% prediction interval, we are 95% confident that the actual value will fall within this range.">Prediction intervals</span> provide a range for individual predictions, useful for business planning.
         </div>
 
         <div class="quiz-item"><p>1. Coefficient for sqft is $250. What does this mean?</p>
@@ -266,11 +326,8 @@ confusionMatrix(predictions, test$Species)
             <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
             <div class="r-code-box">
 # Chapter 2: Multiple Regression
-
 library(tidyverse)
 library(caret)
-
-# Example dataset: Boston housing (simulated)
 set.seed(123)
 n <- 200
 data <- data.frame(
@@ -279,16 +336,10 @@ data <- data.frame(
     age = runif(n, 0, 50),
     price = 100000 + 250 * sqft + 15000 * bedrooms - 500 * age + rnorm(n, 0, 20000)
 )
-
-# Split data
 train_index <- createDataPartition(data$price, p = 0.7, list = FALSE)
 train <- data[train_index, ]
 test <- data[-train_index, ]
-
-# Fit linear regression
 model <- lm(price ~ ., data = train)
-
-# Summary and predictions
 summary(model)
 predictions <- predict(model, test)
 RMSE <- sqrt(mean((test$price - predictions)^2))
@@ -299,14 +350,13 @@ cat("RMSE:", RMSE, "\nMAE:", MAE)
         <a href="#" class="back-top">⬆ Back to top</a>
     </div>
 
-    <!-- ============================================================ -->
     <!-- CHAPTER 3 -->
     <div class="chapter-section hidden" id="ch3">
         <div class="badge">Chapter 3</div>
         <h3>Ridge &amp; Lasso – Regularization</h3>
         <div class="core">📌 controlling overfitting · L2 (Ridge) · L1 (Lasso) · feature selection</div>
         <div class="concept-text">
-            <strong>Key ideas:</strong> Regularization prevents overfitting by adding a penalty to large coefficients. <strong>Ridge (L2)</strong> shrinks coefficients toward zero but keeps all features – useful when many predictors matter. <strong>Lasso (L1)</strong> can set coefficients to exactly zero, performing feature selection – great for simplifying models and reducing data collection costs. Use cross-validation to find the best penalty strength (λ). For regression, RMSE on validation data helps select the best λ.
+            <strong>Key ideas:</strong> Regularization prevents overfitting by adding a penalty to large coefficients. <span class="concept-trigger" data-title="Ridge Regression (L2 Regularization)" data-desc="Adds penalty = λ * Σ(β²). Shrinks coefficients toward zero but keeps all features. Useful when many predictors have some effect. Does not perform feature selection.">Ridge (L2)</span> shrinks coefficients toward zero but keeps all features – useful when many predictors matter. <span class="concept-trigger" data-title="Lasso Regression (L1 Regularization)" data-desc="Adds penalty = λ * Σ|β|. Can set coefficients to exactly zero, performing feature selection. Great for simplifying models and reducing data collection costs.">Lasso (L1)</span> can set coefficients to exactly zero, performing feature selection – great for simplifying models and reducing data collection costs. Use <span class="concept-trigger" data-title="Cross-Validation for λ" data-desc="A technique to select the optimal penalty strength (λ). Divides data into folds, trains on subsets, validates on held-out data. Selects λ that minimizes out-of-sample error (e.g., RMSE).">cross-validation</span> to find the best penalty strength (λ). For regression, <span class="concept-trigger" data-title="RMSE (Root Mean Squared Error)" data-desc="The square root of the average squared differences between predicted and actual values. Used in cross-validation to select λ. Lower RMSE = better generalization.">RMSE</span> on validation data helps select the best λ.
         </div>
 
         <div class="quiz-item"><p>1. 200 features, 500 rows, high variance. Which method also selects features?</p>
@@ -339,38 +389,22 @@ cat("RMSE:", RMSE, "\nMAE:", MAE)
             <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
             <div class="r-code-box">
 # Chapter 3: Ridge & Lasso Regularization
-
 library(tidyverse)
 library(glmnet)
-
-# Simulate data with many features
 set.seed(123)
-n <- 200
-p <- 50
+n <- 200; p <- 50
 X <- matrix(rnorm(n * p), n, p)
-beta <- rnorm(p)
-beta[20:50] <- 0  # only first 20 features matter
+beta <- rnorm(p); beta[20:50] <- 0
 y <- X %*% beta + rnorm(n, 0, 2)
-
-# Train/test split
 train_idx <- sample(1:n, 0.7 * n)
-X_train <- X[train_idx, ]
-y_train <- y[train_idx]
-X_test <- X[-train_idx, ]
-y_test <- y[-train_idx]
-
-# Lasso with cross-validation
+X_train <- X[train_idx, ]; y_train <- y[train_idx]
+X_test <- X[-train_idx, ]; y_test <- y[-train_idx]
 cv_lasso <- cv.glmnet(X_train, y_train, alpha = 1)
 best_lambda <- cv_lasso$lambda.min
-
-# Ridge with cross-validation
 cv_ridge <- cv.glmnet(X_train, y_train, alpha = 0)
 best_lambda_ridge <- cv_ridge$lambda.min
-
-# Predict and evaluate
 lasso_pred <- predict(cv_lasso, newx = X_test, s = best_lambda)
 ridge_pred <- predict(cv_ridge, newx = X_test, s = best_lambda_ridge)
-
 cat("Lasso RMSE:", sqrt(mean((y_test - lasso_pred)^2)))
 cat("Ridge RMSE:", sqrt(mean((y_test - ridge_pred)^2)))
             </div>
@@ -378,14 +412,13 @@ cat("Ridge RMSE:", sqrt(mean((y_test - ridge_pred)^2)))
         <a href="#" class="back-top">⬆ Back to top</a>
     </div>
 
-    <!-- ============================================================ -->
     <!-- CHAPTER 4 -->
     <div class="chapter-section hidden" id="ch4">
         <div class="badge">Chapter 4</div>
         <h3>Logistic Regression</h3>
         <div class="core">📌 classification of categorical variables · probability · ROC/AUC · threshold tuning</div>
         <div class="concept-text">
-            <strong>Key ideas:</strong> Logistic regression predicts the probability of a <strong>binary categorical outcome</strong> (e.g., churn / no churn, fraud / legit). The model outputs log-odds, which are converted to probabilities. For classification, use metrics like <strong>accuracy, precision, recall, F1, and ROC-AUC</strong>. Choose the <em>classification threshold</em> based on business costs – e.g., lower threshold to catch more fraud (higher recall) at the cost of more false alarms.
+            <strong>Key ideas:</strong> Logistic regression predicts the probability of a <strong>binary categorical outcome</strong> (e.g., churn / no churn, fraud / legit). The model outputs log-odds, which are converted to probabilities. For classification, use metrics like <span class="concept-trigger" data-title="Accuracy" data-desc="The proportion of correct predictions among total predictions. (TP + TN) / (TP + TN + FP + FN). Good for balanced datasets, but can be misleading for imbalanced classes.">accuracy</span>, <span class="concept-trigger" data-title="Precision" data-desc="The proportion of positive identifications that were actually correct. TP / (TP + FP). Answers: 'Of all predicted positives, how many are actually positive?' Important when false positives are costly.">precision</span>, <span class="concept-trigger" data-title="Recall (Sensitivity)" data-desc="The proportion of actual positives that were correctly identified. TP / (TP + FN). Answers: 'Of all actual positives, how many did we catch?' Important when false negatives are costly.">recall</span>, <span class="concept-trigger" data-title="F1 Score" data-desc="The harmonic mean of precision and recall. 2 * (Precision * Recall) / (Precision + Recall). A balanced metric that considers both false positives and false negatives.">F1</span>, and <span class="concept-trigger" data-title="ROC-AUC" data-desc="ROC (Receiver Operating Characteristic) curve plots True Positive Rate vs False Positive Rate. AUC (Area Under the Curve) measures the model's ability to distinguish between classes. 0.5 = random, 1.0 = perfect. Higher is better.">ROC-AUC</span>. Choose the <span class="concept-trigger" data-title="Classification Threshold" data-desc="The probability cutoff used to assign class labels. Default is 0.5. Lower threshold = more positive predictions (higher recall, more false alarms). Higher threshold = fewer positive predictions (higher precision). Business costs determine optimal threshold.">classification threshold</span> based on business costs – e.g., lower threshold to catch more fraud (higher recall) at the cost of more false alarms.
         </div>
 
         <div class="quiz-item"><p>1. Model outputs probability 0.35 for default. Threshold 0.5. Classification?</p>
@@ -418,12 +451,9 @@ cat("Ridge RMSE:", sqrt(mean((y_test - ridge_pred)^2)))
             <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
             <div class="r-code-box">
 # Chapter 4: Logistic Regression
-
 library(tidyverse)
 library(caret)
 library(pROC)
-
-# Simulate customer churn data
 set.seed(123)
 n <- 500
 data <- data.frame(
@@ -433,20 +463,11 @@ data <- data.frame(
     churn = rbinom(n, 1, plogis(-2 + 0.02 * age - 0.00001 * income - 0.01 * usage))
 )
 data$churn <- as.factor(data$churn)
-
-# Split data
 train_index <- createDataPartition(data$churn, p = 0.7, list = FALSE)
-train <- data[train_index, ]
-test <- data[-train_index, ]
-
-# Train logistic regression
+train <- data[train_index, ]; test <- data[-train_index, ]
 model <- glm(churn ~ ., data = train, family = binomial)
-
-# Predict probabilities
 pred_probs <- predict(model, test, type = "response")
 pred_class <- ifelse(pred_probs > 0.5, 1, 0)
-
-# Confusion matrix and AUC
 confusionMatrix(as.factor(pred_class), test$churn)
 roc_obj <- roc(test$churn, pred_probs)
 auc(roc_obj)
@@ -455,14 +476,13 @@ auc(roc_obj)
         <a href="#" class="back-top">⬆ Back to top</a>
     </div>
 
-    <!-- ============================================================ -->
     <!-- CHAPTER 5 -->
     <div class="chapter-section hidden" id="ch5">
         <div class="badge">Chapter 5</div>
         <h3>CART – Decision Trees</h3>
         <div class="core">📌 both regression &amp; classification · Gini/entropy · pruning · business rules</div>
         <div class="concept-text">
-            <strong>Key ideas:</strong> Decision trees can handle <strong>both regression (quantitative prediction) and classification (categorical prediction)</strong>. Splits are chosen to maximize purity (Gini or entropy for classification; MSE for regression). <em>Pruning</em> removes branches that overfit, making the tree simpler. Trees are great for extracting actionable business rules (e.g., "if income > $75k and age < 30 then high-value customer").
+            <strong>Key ideas:</strong> Decision trees can handle <strong>both regression (quantitative prediction) and classification (categorical prediction)</strong>. Splits are chosen to maximize purity (<span class="concept-trigger" data-title="Gini Impurity" data-desc="A measure of how often a randomly chosen element would be incorrectly labeled if it was randomly labeled according to the distribution of labels in the node. Ranges from 0 (pure) to 0.5 (maximum impurity). Lower is better.">Gini</span> or <span class="concept-trigger" data-title="Entropy" data-desc="A measure of disorder or uncertainty in a node. Used as a split criterion in decision trees. Lower entropy = purer node. Calculated as -Σ p_i * log₂(p_i).">entropy</span> for classification; <span class="concept-trigger" data-title="MSE (Mean Squared Error)" data-desc="For regression trees, splits minimize the MSE within each node. Calculated as the average squared difference between actual and predicted values.">MSE</span> for regression). <span class="concept-trigger" data-title="Pruning" data-desc="A technique to reduce the size of a decision tree by removing branches that provide little predictive power. Prevents overfitting, makes the tree simpler and more understandable.">Pruning</span> removes branches that overfit, making the tree simpler. Trees are great for extracting actionable business rules (e.g., "if income > $75k and age < 30 then high-value customer").
         </div>
 
         <div class="quiz-item"><p>1. Root split: "income > $75k". What does this represent?</p>
@@ -495,30 +515,18 @@ auc(roc_obj)
             <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
             <div class="r-code-box">
 # Chapter 5: CART – Decision Trees
-
 library(tidyverse)
 library(rpart)
 library(rpart.plot)
-
-# Use iris dataset for classification tree
 data(iris)
 set.seed(123)
 train_index <- sample(1:nrow(iris), 0.7 * nrow(iris))
-train <- iris[train_index, ]
-test <- iris[-train_index, ]
-
-# Train decision tree
+train <- iris[train_index, ]; test <- iris[-train_index, ]
 tree_model <- rpart(Species ~ ., data = train, method = "class",
                     control = rpart.control(cp = 0.01, minsplit = 5))
-
-# Plot tree
 rpart.plot(tree_model, extra = 1)
-
-# Prune using cross-validation
 printcp(tree_model)
 pruned_tree <- prune(tree_model, cp = 0.02)
-
-# Predictions
 pred <- predict(pruned_tree, test, type = "class")
 confusionMatrix(pred, test$Species)
             </div>
@@ -526,14 +534,13 @@ confusionMatrix(pred, test$Species)
         <a href="#" class="back-top">⬆ Back to top</a>
     </div>
 
-    <!-- ============================================================ -->
     <!-- CHAPTER 6 -->
     <div class="chapter-section hidden" id="ch6">
         <div class="badge">Chapter 6</div>
         <h3>k-Nearest Neighbors</h3>
         <div class="core">📌 both regression &amp; classification · distance metrics · choosing k · scaling</div>
         <div class="concept-text">
-            <strong>Key ideas:</strong> kNN predicts based on the "k" most similar training examples. It can be used for <strong>both classification (majority vote) and regression (average of neighbors)</strong>. Distance metrics (e.g., Euclidean) measure similarity. <em>Feature scaling</em> is critical – otherwise features with large ranges dominate. Choosing k is a trade-off: small k overfits, large k smoothes. Performance metrics depend on the task: accuracy/F1 for classification, RMSE/MAE for regression.
+            <strong>Key ideas:</strong> kNN predicts based on the "k" most similar training examples. It can be used for <strong>both classification (majority vote) and regression (average of neighbors)</strong>. Distance metrics (e.g., <span class="concept-trigger" data-title="Euclidean Distance" data-desc="The straight-line distance between two points in Euclidean space. Calculated as √(Σ(x_i - y_i)²). The most common distance metric for kNN.">Euclidean</span>) measure similarity. <span class="concept-trigger" data-title="Feature Scaling" data-desc="Critical for kNN – features with large ranges dominate distance. Common methods: Standardization (z-score) or Min-Max normalization. Without scaling, kNN performs poorly.">Feature scaling</span> is critical – otherwise features with large ranges dominate. Choosing k is a trade-off: small k overfits, large k smoothes. Performance metrics depend on the task: <span class="concept-trigger" data-title="Accuracy" data-desc="The proportion of correct predictions among total predictions. (TP + TN) / (TP + TN + FP + FN). Used for classification tasks.">accuracy</span>/<span class="concept-trigger" data-title="F1 Score" data-desc="The harmonic mean of precision and recall. 2 * (Precision * Recall) / (Precision + Recall). A balanced metric for classification.">F1</span> for classification, <span class="concept-trigger" data-title="RMSE (Root Mean Squared Error)" data-desc="The square root of the average squared differences between predicted and actual values. Used for regression tasks.">RMSE</span>/<span class="concept-trigger" data-title="MAE (Mean Absolute Error)" data-desc="The average absolute difference between predicted and actual values. Used for regression tasks.">MAE</span> for regression.
         </div>
 
         <div class="quiz-item"><p>1. Using kNN with 100 features. Key preprocessing step?</p>
@@ -566,33 +573,19 @@ confusionMatrix(pred, test$Species)
             <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
             <div class="r-code-box">
 # Chapter 6: k-Nearest Neighbors
-
 library(tidyverse)
 library(caret)
-
-# Use iris dataset
 data(iris)
 set.seed(123)
-
-# Scale features (critical for kNN!)
 preprocess <- preProcess(iris[, -5], method = c("center", "scale"))
 iris_scaled <- predict(preprocess, iris)
 iris_scaled$Species <- iris$Species
-
-# Split data
 train_index <- createDataPartition(iris_scaled$Species, p = 0.7, list = FALSE)
-train <- iris_scaled[train_index, ]
-test <- iris_scaled[-train_index, ]
-
-# Train kNN with cross-validation for k selection
+train <- iris_scaled[train_index, ]; test <- iris_scaled[-train_index, ]
 knn_model <- train(Species ~ ., data = train, method = "knn",
                    trControl = trainControl(method = "cv", number = 5),
                    tuneGrid = data.frame(k = seq(1, 20, 2)))
-
-# Best k
 knn_model$bestTune
-
-# Predictions
 pred <- predict(knn_model, test)
 confusionMatrix(pred, test$Species)
             </div>
@@ -600,14 +593,13 @@ confusionMatrix(pred, test$Species)
         <a href="#" class="back-top">⬆ Back to top</a>
     </div>
 
-    <!-- ============================================================ -->
     <!-- CHAPTER 7 -->
     <div class="chapter-section hidden" id="ch7">
         <div class="badge">Chapter 7</div>
         <h3>Deep Learning</h3>
         <div class="core">📌 both regression &amp; classification · layers · dropout · overfitting</div>
         <div class="concept-text">
-            <strong>Key ideas:</strong> Deep learning uses neural networks with multiple layers to learn complex patterns. It can handle <strong>both regression and classification</strong> tasks. <em>Activation functions</em> (e.g., ReLU) introduce non-linearity. <em>Dropout</em> randomly turns off neurons during training to prevent overfitting. Choose the right loss function (MSE for regression; cross-entropy for classification) and metrics (RMSE/MAE for regression; accuracy/F1 for classification).
+            <strong>Key ideas:</strong> Deep learning uses neural networks with multiple layers to learn complex patterns. It can handle <strong>both regression and classification</strong> tasks. <span class="concept-trigger" data-title="Activation Functions" data-desc="Non-linear functions that introduce non-linearity into neural networks. Common: ReLU (Rectified Linear Unit) for hidden layers, sigmoid/softmax for output in classification, linear for regression.">Activation functions</span> (e.g., ReLU) introduce non-linearity. <span class="concept-trigger" data-title="Dropout" data-desc="A regularization technique that randomly drops out (sets to zero) a fraction of neurons during training. Prevents co-adaptation of neurons and reduces overfitting. Rate = 0.5 means 50% of neurons are dropped.">Dropout</span> randomly turns off neurons during training to prevent overfitting. Choose the right loss function (MSE for regression; cross-entropy for classification) and metrics (<span class="concept-trigger" data-title="RMSE (Root Mean Squared Error)" data-desc="For regression tasks. The square root of the average squared differences between predicted and actual values.">RMSE</span>/<span class="concept-trigger" data-title="MAE (Mean Absolute Error)" data-desc="For regression tasks. The average absolute difference between predicted and actual values.">MAE</span> for regression; <span class="concept-trigger" data-title="Accuracy" data-desc="For classification tasks. The proportion of correct predictions among total predictions.">accuracy</span>/<span class="concept-trigger" data-title="F1 Score" data-desc="For classification tasks. The harmonic mean of precision and recall.">F1</span> for classification).
         </div>
 
         <div class="quiz-item"><p>1. 10 million images, 100 categories. Which approach?</p>
@@ -640,62 +632,36 @@ confusionMatrix(pred, test$Species)
             <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
             <div class="r-code-box">
 # Chapter 7: Deep Learning with keras
-
 library(tidyverse)
 library(keras)
-
-# Simulate a simple classification problem
 set.seed(123)
 n <- 1000
 X <- matrix(rnorm(n * 10), n, 10)
 y <- ifelse(X[,1] + X[,2] + rnorm(n, 0, 0.5) > 0, 1, 0)
-
-# Train/test split
 train_idx <- sample(1:n, 0.7 * n)
-X_train <- X[train_idx, ]
-y_train <- y[train_idx]
-X_test <- X[-train_idx, ]
-y_test <- y[-train_idx]
-
-# Build neural network
+X_train <- X[train_idx, ]; y_train <- y[train_idx]
+X_test <- X[-train_idx, ]; y_test <- y[-train_idx]
 model <- keras_model_sequential() %>%
     layer_dense(units = 32, activation = "relu", input_shape = 10) %>%
     layer_dropout(rate = 0.3) %>%
     layer_dense(units = 16, activation = "relu") %>%
     layer_dropout(rate = 0.2) %>%
     layer_dense(units = 1, activation = "sigmoid")
-
-# Compile
-model %>% compile(
-    loss = "binary_crossentropy",
-    optimizer = "adam",
-    metrics = "accuracy"
-)
-
-# Train
-history <- model %>% fit(
-    X_train, y_train,
-    epochs = 50,
-    batch_size = 32,
-    validation_split = 0.2,
-    verbose = 0
-)
-
-# Evaluate
+model %>% compile(loss = "binary_crossentropy", optimizer = "adam", metrics = "accuracy")
+history <- model %>% fit(X_train, y_train, epochs = 50, batch_size = 32, validation_split = 0.2, verbose = 0)
 model %>% evaluate(X_test, y_test)
             </div>
         </div>
         <a href="#" class="back-top">⬆ Back to top</a>
     </div>
 
-    <!-- ============================================================ -->
     <!-- CHAPTER 8 – CLUSTERING -->
     <div class="chapter-section hidden" id="ch8">
         <div class="badge">Chapter 8</div>
         <h3>Clustering</h3>
         <div class="core">📌 unsupervised · k-means · hierarchical · DBSCAN · silhouette score</div>
         <div class="concept-text">
-            <strong>Key ideas:</strong> Clustering finds natural groups in unlabeled data (unsupervised learning). <em>k-means</em> partitions data into k clusters based on centroids. <em>Hierarchical</em> builds a tree of clusters. <em>DBSCAN</em> finds clusters of arbitrary shape. Use <em>silhouette score</em> to evaluate cluster quality. In business, clustering helps with customer segmentation, market basket analysis, and anomaly detection. Since it's unsupervised, there are no labels – evaluation is based on internal cohesion and separation.
+            <strong>Key ideas:</strong> Clustering finds natural groups in unlabeled data (unsupervised learning). <span class="concept-trigger" data-title="k-means Clustering" data-desc="Partitions data into k clusters based on centroids. Minimizes within-cluster variance (inertia). Requires choosing k. Works well for spherical clusters.">k-means</span> partitions data into k clusters based on centroids. <span class="concept-trigger" data-title="Hierarchical Clustering" data-desc="Builds a tree (dendrogram) of clusters. Agglomerative (bottom-up) or divisive (top-down). No need to pre-specify k. Can choose k by cutting the dendrogram.">Hierarchical</span> builds a tree of clusters. <span class="concept-trigger" data-title="DBSCAN" data-desc="Density-based spatial clustering. Finds clusters of arbitrary shape. Handles outliers well. Requires eps (neighborhood radius) and minPts (minimum points per cluster).">DBSCAN</span> finds clusters of arbitrary shape. Use <span class="concept-trigger" data-title="Silhouette Score" data-desc="A measure of cluster quality. Ranges from -1 to 1. Higher = better separation. For each point, compares its distance to own cluster vs nearest other cluster. Average silhouette across all points.">silhouette score</span> to evaluate cluster quality. <span class="concept-trigger" data-title="Inertia (Within-Cluster Sum of Squares)" data-desc="The sum of squared distances of samples to their closest cluster center. Lower is better. Used to evaluate k-means clustering quality. The 'elbow method' looks for a bend in the inertia curve.">Inertia</span> measures cluster compactness – lower is better.
         </div>
 
         <div class="quiz-item"><p>1. Marketing wants to segment customers by purchase behavior. Which method?</p>
@@ -728,32 +694,16 @@ model %>% evaluate(X_test, y_test)
             <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
             <div class="r-code-box">
 # Chapter 8: Clustering
-
 library(tidyverse)
 library(cluster)
 library(factoextra)
-
-# Use iris data (remove labels for clustering)
 data <- iris[, -5]
 set.seed(123)
-
-# Scale data
 data_scaled <- scale(data)
-
-# k-means with k=3
 kmeans_result <- kmeans(data_scaled, centers = 3, nstart = 25)
-
-# Visualize clusters
-fviz_cluster(kmeans_result, data = data_scaled,
-             ellipse.type = "norm",
-             palette = "jco",
-             ggtheme = theme_minimal())
-
-# Silhouette score
+fviz_cluster(kmeans_result, data = data_scaled, ellipse.type = "norm", palette = "jco", ggtheme = theme_minimal())
 sil <- silhouette(kmeans_result$cluster, dist(data_scaled))
 mean(sil[, 3])
-
-# Hierarchical clustering
 hc <- hclust(dist(data_scaled), method = "ward.D2")
 fviz_dend(hc, k = 3, rect = TRUE)
             </div>
@@ -761,14 +711,13 @@ fviz_dend(hc, k = 3, rect = TRUE)
         <a href="#" class="back-top">⬆ Back to top</a>
     </div>
 
-    <!-- ============================================================ -->
     <!-- CHAPTER 9 – ENSEMBLE -->
     <div class="chapter-section hidden" id="ch9">
         <div class="badge">Chapter 9</div>
         <h3>Ensemble Methods</h3>
         <div class="core">📌 bagging · boosting · variance/bias reduction · both regression &amp; classification</div>
         <div class="concept-text">
-            <strong>Key ideas:</strong> Ensemble methods combine multiple models to improve performance. <em>Bagging</em> (e.g., Random Forest) reduces variance by averaging many trees – works for both regression and classification. <em>Boosting</em> (e.g., XGBoost) sequentially corrects errors, reducing bias. For regression, use RMSE/MAE; for classification, use accuracy/F1/ROC-AUC. Ensembles are powerful but can be harder to interpret – in business, they often deliver state-of-the-art accuracy for churn, fraud, and demand forecasting.
+            <strong>Key ideas:</strong> Ensemble methods combine multiple models to improve performance. <span class="concept-trigger" data-title="Bagging (Bootstrap Aggregating)" data-desc="Reduces variance by averaging many models. Builds multiple models on bootstrap samples of the training data. Random Forest is a popular bagging method. Works for both regression and classification.">Bagging</span> (e.g., Random Forest) reduces variance by averaging many trees – works for both regression and classification. <span class="concept-trigger" data-title="Boosting" data-desc="Sequentially corrects errors of previous models. Examples: AdaBoost, XGBoost, Gradient Boosting. Reduces bias. Can overfit if not regularized. Often achieves higher accuracy than bagging.">Boosting</span> (e.g., XGBoost) sequentially corrects errors, reducing bias. For regression, use <span class="concept-trigger" data-title="RMSE (Root Mean Squared Error)" data-desc="For regression tasks. The square root of the average squared differences between predicted and actual values.">RMSE</span>/<span class="concept-trigger" data-title="MAE (Mean Absolute Error)" data-desc="For regression tasks. The average absolute difference between predicted and actual values.">MAE</span>; for classification, use <span class="concept-trigger" data-title="Accuracy" data-desc="For classification tasks. The proportion of correct predictions among total predictions.">accuracy</span>/<span class="concept-trigger" data-title="F1 Score" data-desc="For classification tasks. The harmonic mean of precision and recall.">F1</span>/<span class="concept-trigger" data-title="ROC-AUC" data-desc="For classification tasks. Measures the model's ability to distinguish between classes.">ROC-AUC</span>. Ensembles are powerful but can be harder to interpret – in business, they often deliver state-of-the-art accuracy for churn, fraud, and demand forecasting.
         </div>
 
         <div class="quiz-item"><p>1. Single tree has high variance. Which ensemble reduces variance by averaging?</p>
@@ -801,39 +750,21 @@ fviz_dend(hc, k = 3, rect = TRUE)
             <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
             <div class="r-code-box">
 # Chapter 9: Ensemble Methods
-
 library(tidyverse)
 library(caret)
 library(randomForest)
 library(xgboost)
-
-# Use iris dataset
 data(iris)
 set.seed(123)
-
-# Split data
 train_index <- createDataPartition(iris$Species, p = 0.7, list = FALSE)
-train <- iris[train_index, ]
-test <- iris[-train_index, ]
-
-# Random Forest
+train <- iris[train_index, ]; test <- iris[-train_index, ]
 rf_model <- randomForest(Species ~ ., data = train, ntree = 100)
 rf_pred <- predict(rf_model, test)
 confusionMatrix(rf_pred, test$Species)
-
-# XGBoost
-xgb_train <- xgb.DMatrix(data = as.matrix(train[, -5]),
-                         label = as.numeric(train$Species) - 1)
+xgb_train <- xgb.DMatrix(data = as.matrix(train[, -5]), label = as.numeric(train$Species) - 1)
 xgb_test <- xgb.DMatrix(data = as.matrix(test[, -5]))
-
-xgb_model <- xgboost(data = xgb_train,
-                     max_depth = 3,
-                     eta = 0.3,
-                     nrounds = 50,
-                     objective = "multi:softmax",
-                     num_class = 3,
-                     verbose = 0)
-
+xgb_model <- xgboost(data = xgb_train, max_depth = 3, eta = 0.3, nrounds = 50,
+                     objective = "multi:softmax", num_class = 3, verbose = 0)
 xgb_pred <- predict(xgb_model, xgb_test)
 confusionMatrix(as.factor(xgb_pred + 1), test$Species)
             </div>
@@ -841,14 +772,13 @@ confusionMatrix(as.factor(xgb_pred + 1), test$Species)
         <a href="#" class="back-top">⬆ Back to top</a>
     </div>
 
-    <!-- ============================================================ -->
     <!-- CHAPTER 10 – SVM -->
     <div class="chapter-section hidden" id="ch10">
         <div class="badge">Chapter 10</div>
         <h3>Support Vector Machines</h3>
         <div class="core">📌 classification · maximal margin · kernel trick · soft margin (C)</div>
         <div class="concept-text">
-            <strong>Key ideas:</strong> SVM finds the hyperplane that maximizes the margin between classes (classification). <em>Support vectors</em> are the critical points that define the margin. The <em>kernel trick</em> (e.g., RBF) allows non-linear classification by mapping data to higher dimensions. The <em>C parameter</em> controls the trade-off between margin width and misclassification – a business choice between simplicity and accuracy. For classification, use accuracy, precision, recall, or F1 depending on business costs.
+            <strong>Key ideas:</strong> SVM finds the hyperplane that maximizes the margin between classes (classification). <span class="concept-trigger" data-title="Support Vectors" data-desc="Critical points that define the margin. Only these points influence the hyperplane. The margin is determined by the closest points to the decision boundary.">Support vectors</span> are the critical points that define the margin. The <span class="concept-trigger" data-title="Kernel Trick" data-desc="Maps data to higher-dimensional space for non-linear separation. Common kernels: RBF (Radial Basis Function), polynomial, sigmoid. Allows SVMs to handle non-linearly separable data.">kernel trick</span> (e.g., RBF) allows non-linear classification by mapping data to higher dimensions. The <span class="concept-trigger" data-title="C Parameter (Soft Margin)" data-desc="Controls the trade-off between margin width and misclassification. Low C = wider margin (more misclassifications, simpler model). High C = narrower margin (fewer misclassifications, risk of overfitting). Business choice between simplicity and accuracy.">C parameter</span> controls the trade-off between margin width and misclassification – a business choice between simplicity and accuracy. For classification, use <span class="concept-trigger" data-title="Accuracy" data-desc="The proportion of correct predictions among total predictions.">accuracy</span>, <span class="concept-trigger" data-title="Precision" data-desc="The proportion of positive identifications that were actually correct.">precision</span>, <span class="concept-trigger" data-title="Recall (Sensitivity)" data-desc="The proportion of actual positives that were correctly identified.">recall</span>, or <span class="concept-trigger" data-title="F1 Score" data-desc="The harmonic mean of precision and recall.">F1</span> depending on business costs.
         </div>
 
         <div class="quiz-item"><p>1. Data is not linearly separable. Which SVM technique handles this?</p>
@@ -881,37 +811,18 @@ confusionMatrix(as.factor(xgb_pred + 1), test$Species)
             <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
             <div class="r-code-box">
 # Chapter 10: Support Vector Machines
-
 library(tidyverse)
 library(e1071)
 library(caret)
-
-# Use iris dataset
 data(iris)
 set.seed(123)
-
-# Split data
 train_index <- createDataPartition(iris$Species, p = 0.7, list = FALSE)
-train <- iris[train_index, ]
-test <- iris[-train_index, ]
-
-# SVM with RBF kernel
-svm_model <- svm(Species ~ ., data = train,
-                 kernel = "radial",
-                 cost = 1,
-                 gamma = 0.1,
-                 probability = TRUE)
-
-# Predictions
+train <- iris[train_index, ]; test <- iris[-train_index, ]
+svm_model <- svm(Species ~ ., data = train, kernel = "radial", cost = 1, gamma = 0.1, probability = TRUE)
 svm_pred <- predict(svm_model, test)
 confusionMatrix(svm_pred, test$Species)
-
-# Tune parameters
-tune_result <- tune(svm, Species ~ ., data = train,
-                    kernel = "radial",
-                    ranges = list(cost = c(0.1, 1, 10),
-                                  gamma = c(0.01, 0.1, 1)))
-
+tune_result <- tune(svm, Species ~ ., data = train, kernel = "radial",
+                    ranges = list(cost = c(0.1, 1, 10), gamma = c(0.01, 0.1, 1)))
 best_model <- tune_result$best.model
 best_pred <- predict(best_model, test)
 confusionMatrix(best_pred, test$Species)
@@ -920,14 +831,13 @@ confusionMatrix(best_pred, test$Species)
         <a href="#" class="back-top">⬆ Back to top</a>
     </div>
 
-    <!-- ============================================================ -->
     <!-- CHAPTER 11 – PCA -->
     <div class="chapter-section hidden" id="ch11">
         <div class="badge">Chapter 11</div>
         <h3>PCA – Principal Component Analysis</h3>
         <div class="core">📌 dimensionality reduction · explained variance · data compression</div>
         <div class="concept-text">
-            <strong>Key ideas:</strong> PCA reduces the number of features while preserving as much variance as possible. It creates new uncorrelated variables (principal components) that are linear combinations of the original features. Use a <em>scree plot</em> to decide how many components to keep. In business, PCA helps with data compression, visualization, and speeding up other models – but you lose interpretability of original features. It's a preprocessing step, not a predictive model itself.
+            <strong>Key ideas:</strong> PCA reduces the number of features while preserving as much variance as possible. It creates new uncorrelated variables (principal components) that are linear combinations of the original features. Use a <span class="concept-trigger" data-title="Scree Plot" data-desc="A plot showing the variance explained by each principal component. Look for the 'elbow' – the point where additional components add little explanatory power. Helps decide how many components to keep.">scree plot</span> to decide how many components to keep. <span class="concept-trigger" data-title="Explained Variance" data-desc="The proportion of total variance captured by each principal component. Components are ordered from highest to lowest explained variance. The cumulative explained variance shows how much total variance is preserved.">Explained variance</span> tells us how much information is retained. <span class="concept-trigger" data-title="Principal Components" data-desc="New uncorrelated variables that are linear combinations of the original features. PC1 captures the most variance, PC2 captures the second most, and so on. These are orthogonal (uncorrelated).">Principal components</span> are the new features. In business, PCA helps with data compression, visualization, and speeding up other models – but you lose interpretability of original features. It's a preprocessing step, not a predictive model itself.
         </div>
 
         <div class="quiz-item"><p>1. 200 correlated features → 10 PCs explain 85% variance. Business benefit?</p>
@@ -960,38 +870,17 @@ confusionMatrix(best_pred, test$Species)
             <button class="btn-r-code" onclick="toggleRCode(this)">📊 Show R Code</button>
             <div class="r-code-box">
 # Chapter 11: Principal Component Analysis (PCA)
-
 library(tidyverse)
 library(factoextra)
-
-# Use iris dataset
 data(iris)
 features <- iris[, -5]
-
-# Scale features (critical for PCA)
 features_scaled <- scale(features)
-
-# Perform PCA
 pca_result <- prcomp(features_scaled, center = FALSE, scale. = FALSE)
-
-# Summary of explained variance
 summary(pca_result)
-
-# Scree plot
 fviz_eig(pca_result, addlabels = TRUE)
-
-# Visualize PCA
-fviz_pca_ind(pca_result, 
-             col.ind = iris$Species,
-             palette = "jco",
-             addEllipses = TRUE,
-             ellipse.level = 0.95)
-
-# Use PCA components for further analysis (e.g., clustering)
+fviz_pca_ind(pca_result, col.ind = iris$Species, palette = "jco", addEllipses = TRUE, ellipse.level = 0.95)
 pca_data <- as.data.frame(pca_result$x[, 1:2])
 pca_data$Species <- iris$Species
-
-# Check correlation between original features and PCs
 cor(features_scaled, pca_result$x[, 1:2])
             </div>
         </div>
@@ -1006,25 +895,16 @@ cor(features_scaled, pca_result$x[, 1:2])
 </div>
 
 <script>
-    // Dropdown navigation
     function showChapter(chapterId) {
-        // Hide all chapters
         const sections = document.querySelectorAll('.chapter-section');
-        sections.forEach(section => {
-            section.classList.add('hidden');
-        });
-        // Show selected chapter
+        sections.forEach(section => section.classList.add('hidden'));
         const target = document.getElementById(chapterId);
         if (target) {
             target.classList.remove('hidden');
-        }
-        // Scroll to top of the chapter
-        if (target) {
             target.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
     }
 
-    // Toggle quiz answers
     function toggleAnswer(btn) {
         const box = btn.nextElementSibling;
         if (box.classList.contains('show')) {
@@ -1036,7 +916,6 @@ cor(features_scaled, pca_result$x[, 1:2])
         }
     }
 
-    // Toggle R code
     function toggleRCode(btn) {
         const box = btn.nextElementSibling;
         if (box.classList.contains('show')) {
@@ -1048,7 +927,30 @@ cor(features_scaled, pca_result$x[, 1:2])
         }
     }
 
-    // Show first chapter by default
+    const overlay = document.getElementById('popupOverlay');
+    const titleEl = document.getElementById('popupTitle');
+    const contentEl = document.getElementById('popupContent');
+
+    document.addEventListener('click', function(e) {
+        const trigger = e.target.closest('.concept-trigger');
+        if (trigger) {
+            e.preventDefault();
+            const title = trigger.getAttribute('data-title') || 'Concept';
+            const desc = trigger.getAttribute('data-desc') || 'No explanation provided.';
+            titleEl.textContent = title;
+            contentEl.textContent = desc;
+            overlay.classList.add('active');
+        }
+    });
+
+    function closePopup() {
+        overlay.classList.remove('active');
+    }
+
+    overlay.addEventListener('click', function(e) {
+        if (e.target === overlay) closePopup();
+    });
+
     document.addEventListener('DOMContentLoaded', function() {
         showChapter('ch1');
         document.getElementById('chapterSelect').value = 'ch1';
